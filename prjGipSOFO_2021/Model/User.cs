@@ -22,6 +22,6 @@ namespace prjGipSOFO_2021.Model
         public bool Status { get; set; }
         public int Rol_id { get; set; }
         public string Rol { get; set; }
-        public bool MagBuiten { get; set; }
+        public int MagBuiten { get; set; }
     }
 }
