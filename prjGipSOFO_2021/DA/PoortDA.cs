@@ -181,9 +181,24 @@ namespace prjGipSOFO_2021.DA
             }
         }
 
+
         public static (DateTime, DateTime)? Union((DateTime, DateTime) a, (DateTime, DateTime) b) =>
             a.Item2 < b.Item1 || b.Item2 < a.Item1 ? ((DateTime, DateTime)?)null : (Min(a.Item1, b.Item1), Max(a.Item2, b.Item2));
+
         public static DateTime Min(DateTime a, DateTime b) => b < a ? b : a;
+
+        // = zelfde als:
+        //
+        //    if (b < a)
+        //    {
+        //        return b;
+        //    }
+        //    else
+        //    {
+        //        return a;
+        //    }
+
+
         public static DateTime Max(DateTime a, DateTime b) => b > a ? b : a;
     }
 }

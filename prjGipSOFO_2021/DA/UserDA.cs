@@ -162,7 +162,7 @@ namespace prjGipSOFO_2021.DA
                 Status = Convert.ToBoolean(record["Status"]),
                 Rol_id = Convert.ToInt32(record["Rol_id"]),
                 Rol = Convert.ToString(record["Rol"]),
-                MagBuiten = Convert.ToBoolean(record["MagBuiten"])
+                MagBuiten = Convert.ToInt32(record["MagBuiten"])
             };
         }
 
@@ -179,7 +179,7 @@ namespace prjGipSOFO_2021.DA
                 Gemeente = record["Gemeente"].ToString(),
                 Barcode = record["Barcode"].ToString(),
                 Emailadres = record["Emailadres"].ToString(),
-                MagBuiten = Convert.ToBoolean(record["MagBuiten"])
+                MagBuiten = Convert.ToInt32(record["MagBuiten"])
             };
         }
 
