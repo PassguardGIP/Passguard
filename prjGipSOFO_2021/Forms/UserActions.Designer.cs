@@ -183,6 +183,7 @@ namespace prjGipSOFO_2021.Forms
             this.cboGemeente.Name = "cboGemeente";
             this.cboGemeente.Size = new System.Drawing.Size(259, 29);
             this.cboGemeente.TabIndex = 11;
+            this.cboGemeente.SelectedIndexChanged += new System.EventHandler(this.cboGemeente_SelectedIndexChanged);
             // 
             // label7
             // 

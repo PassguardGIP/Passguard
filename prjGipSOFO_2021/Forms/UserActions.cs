@@ -25,8 +25,10 @@ namespace prjGipSOFO_2021.Forms
         // 0 = add, 1 = edit
         public int Action { get; set; }
         public int idUser { get; set; }
-
+        
         string chosenfile;
+
+        Dictionary<string, string> GemeenteInfo = new Dictionary<string, string>();
 
         public UserActions(int action)
         {
@@ -47,6 +49,12 @@ namespace prjGipSOFO_2021.Forms
                     break;
             }
 
+            ReadXML();
+            
+        }
+
+        private void ReadXML()
+        {
             XmlDocument doc = new XmlDocument();
             doc.Load("postcodes/postcodes.xml");
 
@@ -58,13 +66,17 @@ namespace prjGipSOFO_2021.Forms
                 string gemeente = element["naam"].InnerXml;
                 string provincie = element["provincie"].InnerXml;
 
-                if (gemeente == "Brugge")
-                {
-                    Console.WriteLine("{0}: {1}",gemeente, postcode);
-                }
-
-
                 cboGemeente.Items.Add(gemeente);
+                try
+                {
+                    GemeenteInfo.Add(gemeente, Convert.ToString(postcode));
+                }
+                catch(Exception e)
+                {
+
+                }
+                
+                
             }
         }
 
@@ -278,6 +290,12 @@ namespace prjGipSOFO_2021.Forms
             user.Barcode = txtBarcode.Text;
             user.Emailadres = txtEmail.Text;
             user.Rol_id = 0;
+            user.MagBuiten = 0;
+
+            if (chkMagBuiten.Checked)
+            {
+                user.MagBuiten = 1;
+            }
 
             switch (Action)
             {
@@ -307,8 +325,16 @@ namespace prjGipSOFO_2021.Forms
 
                 if (!File.Exists(dest))
                 {
-                    File.Copy(chosenfile, dest);
-                    picUser.Image = new Bitmap(dest);
+                    try
+                    {
+                        File.Copy(chosenfile, dest);
+                        picUser.Image = new Bitmap(dest);
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
+                    
                 }
 
                 Console.WriteLine(dest);
@@ -320,10 +346,39 @@ namespace prjGipSOFO_2021.Forms
 
         private void txtPostcode_TextChanged(object sender, EventArgs e)
         {
-            //if (cboBestaande.FindString(cboBestaande.Text) == -1)
-            //{
-            //    cboBestaande.Text = "";
-            //}
+            if (GemeenteInfo.ContainsValue(txtPostcode.Text))
+            {
+                // found value
+                // get key for value
+                try
+                {
+                    string key = GemeenteInfo.FirstOrDefault(x => x.Value == txtPostcode.Text).Key;
+                    Console.WriteLine(key);
+
+                    cboGemeente.Text = key;
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+            else
+            {
+                // no value
+                cboGemeente.Text = "";
+            }
         }
+
+        private void cboGemeente_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string gemeente = cboGemeente.Text;
+
+            string postcode = GemeenteInfo[gemeente];
+            txtPostcode.Text = postcode;
+        }
+
+
     }
 }

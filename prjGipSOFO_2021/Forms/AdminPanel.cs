@@ -32,6 +32,7 @@ namespace prjGipSOFO_2021
 
         public ListViewColumnSorter lvwColumnSorter;
 
+        // voor TCP - listviews worden gerefreshed op de achtergrond
         BackgroundWorker bw;
         public static AdminPanel admin;
 
@@ -50,7 +51,7 @@ namespace prjGipSOFO_2021
             // eerste listview refreshen
             ListViewTools.RefreshRegistraties(lsvRegistraties, allRegistraties);
 
-            // opvraging FTP
+            // opvraging fotos FTP
             Thread thread = new Thread(FTPclient.GetNewFiles);
             thread.Start();
 
@@ -94,6 +95,7 @@ namespace prjGipSOFO_2021
         public static void EventTriggered()
         {
             // refresh registraties via andere thread
+            // dit refresht de listview - anders krijg je exception van mag niet
             admin.Invoke(new Action(() =>
             {
                 ListViewTools.RefreshRegistraties(admin.lsvRegistraties, admin.allRegistraties);
@@ -126,8 +128,8 @@ namespace prjGipSOFO_2021
 
                 case 3:
                     Console.WriteLine("users");
-
                     ListViewTools.RefreshUsers(lsvUsers, allUsers);
+
                     break;
 
                 default:
@@ -159,8 +161,7 @@ namespace prjGipSOFO_2021
             tabNav.SelectedIndex = 3;
         }
 
-
-        // zoekbalk (nog niet optimaal)
+        // ZOEKBALKEN
         private void txtSearchRegistratie_TextChanged(object sender, EventArgs e)
         {
             ListViewTools.SearchItem(lsvRegistraties, txtSearchRegistratie, allRegistraties);
@@ -182,9 +183,20 @@ namespace prjGipSOFO_2021
         // de "net terug van andere form" event
         private void AdminPanel_Activated(object sender, EventArgs e)
         {
-            if (tabNav.SelectedIndex == 2)
+            switch (tabNav.SelectedIndex)
             {
-                ListViewTools.RefreshPoorten(lsvPoorten, allPoorten);
+                case 0:
+                    ListViewTools.RefreshRegistraties(lsvRegistraties, allRegistraties);
+                    break;
+                case 1:
+                    ListViewTools.RefreshMeldingen(lsvMeldingen, allMeldingen);
+                    break;
+                case 2:
+                    ListViewTools.RefreshPoorten(lsvPoorten, allPoorten);
+                    break;
+                case 3:
+                    ListViewTools.RefreshUsers(lsvUsers, allUsers);
+                    break;
             }
         }
 
@@ -512,7 +524,7 @@ namespace prjGipSOFO_2021
                     info.lblStatus.ForeColor = Color.FromArgb(239, 35, 60);
                 }
 
-                if (user.MagBuiten == true)
+                if (user.MagBuiten == 1)
                 {
                     info.lblMagBuiten.Text = "Ja";
                     info.lblMagBuiten.ForeColor = Color.ForestGreen;
@@ -697,7 +709,7 @@ namespace prjGipSOFO_2021
                 user.Voornaam = voornaam;
                 user.Naam = naam;
                 user.Barcode = barcode;
-                user.MagBuiten = true;
+                user.MagBuiten = 1;
                 user.Rol_id = 0;
                 user.Status = false;
                 user.Adres = adres;
